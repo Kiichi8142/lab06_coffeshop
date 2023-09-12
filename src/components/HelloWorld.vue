@@ -32,6 +32,7 @@ const bookShop = (name) => {
     bookingTel.value = ''
     bookingDate.value = ''
     bookingTable.value = ''
+    formErrorMessage.value = ''
   } else {
     formErrorMessage.value = 'กรุณาเลือกร้านที่ต้องการ'
   }
