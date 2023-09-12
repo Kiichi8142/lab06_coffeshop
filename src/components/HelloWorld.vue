@@ -1,18 +1,20 @@
 <script setup>
 import { ref } from 'vue'
 
-const bookingList = ref ([])
+const bookingList = ref([])
 
 const shop = ref('กรุณาเลือกร้าน')
 const bookingName = ref()
-const bookingTime = ref()
+const bookingTime = ref('12:00')
 const bookingTel = ref()
 const bookingDate = ref()
-const bookingTable = ref()
+const bookingTable = ref(1)
 
 const setShop = (name) => {
   shop.value = name
 }
+
+const formErrorMessage = ref();
 
 const bookShop = (name) => {
   if (shop.value != "กรุณาเลือกร้าน") {
@@ -30,10 +32,12 @@ const bookShop = (name) => {
     bookingTel.value = ''
     bookingDate.value = ''
     bookingTable.value = ''
+  } else {
+    formErrorMessage.value = 'กรุณาเลือกร้านที่ต้องการ'
   }
 }
 
-const travelList = ref ([
+const travelList = ref([
   {
     name: "Mingmitr Coffee",
     price: 4.4,
@@ -68,19 +72,21 @@ const travelList = ref ([
     <div class="py-8 px-4">
       <p class="text-sky-400 text-base font-bold">รายชื่อร้าน</p>
       <p class="text-white text-3xl font-extrabold">เลือกร้านที่ต้องการจอง</p>
-      <div class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-16 justify-items-center place-content-center">
-          <div v-for="item in travelList">
-            <div class="text-white bg-slate-800 w-full md:w-96 lg:w-80 rounded-md">
-                <img :src="item.imgUrl" class="object-cover rounded-t-md">
-                <div class="px-4 py-4">
-                    <p class="font-medium text-base">{{ item.name }}</p>
-                    <p>{{ item.price }}</p>
-                    <button @click="setShop(item.name)" class="mt-5 inline-flex w-full items-center justify-center p-2 active:bg-sky-800 bg-sky-500 rounded-md shadow-lg">
-                        เลือกร้าน
-                    </button>
-                </div>
+      <div
+        class="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-16 justify-items-center place-content-center">
+        <div v-for="item in travelList">
+          <div class="text-white bg-slate-800 w-full md:w-96 lg:w-80 rounded-md">
+            <img :src="item.imgUrl" class="object-cover rounded-t-md">
+            <div class="px-4 py-4">
+              <p class="font-medium text-base">{{ item.name }}</p>
+              <p>{{ item.price }}</p>
+              <button @click="setShop(item.name)"
+                class="mt-5 inline-flex w-full items-center justify-center p-2 active:bg-sky-800 bg-sky-500 rounded-md shadow-lg">
+                เลือกร้าน
+              </button>
             </div>
           </div>
+        </div>
       </div>
     </div>
 
@@ -90,11 +96,13 @@ const travelList = ref ([
       <form @submit.prevent="bookShop(shop)" class="mt-5 gap-4 grid grid-col-1 md:grid-cols-2 lg:grid-cols-4">
         <div class="flex flex-col md:col-span-2">
           <label>ชื่อผู้จอง</label>
-          <input required v-model="bookingName" class="rounded-md text-gray-950 block border-gray-300" type="text">
+          <input maxlength="50" required v-model="bookingName" class="rounded-md text-gray-950 block border-gray-300"
+            type="text">
         </div>
         <div class="flex flex-col md:col-span-1">
           <label>เบอร์โทรศัพท์</label>
-          <input maxlength="10" required v-model="bookingTel" class="rounded-md text-gray-950 block border-gray-300" type="tel">
+          <input maxlength="10" required v-model="bookingTel" pattern="[0-9]*"
+            class="rounded-md text-gray-950 block border-gray-300" type="text">
         </div>
         <div class="flex flex-col md:col-span-1">
           <label>วันที่</label>
@@ -106,9 +114,13 @@ const travelList = ref ([
         </div>
         <div class="flex flex-col md:col-span-1">
           <label>จำนวนโต้ะ</label>
-          <input min="1" required v-model="bookingTable" class="rounded-md text-gray-950 block border-gray-300" type="number">
+          <input min="1" required v-model="bookingTable" class="rounded-md text-gray-950 block border-gray-300"
+            type="number">
         </div>
-        <button class="mt-5 md:col-span-2 lg:col-span-4 inline-flex w-full items-center justify-center p-2 active:bg-sky-800 bg-sky-500 rounded-md shadow-lg" type="submit">จองโต้ะ</button>
+        <p class="text-red-500">{{ formErrorMessage }}</p>
+        <button
+          class="mt-5 md:col-span-2 lg:col-span-4 inline-flex w-full items-center justify-center p-2 active:bg-sky-800 bg-sky-500 rounded-md shadow-lg"
+          type="submit">จองโต้ะ</button>
       </form>
     </div>
 
@@ -127,7 +139,7 @@ const travelList = ref ([
       </div>
       <div v-for="(list, index) in bookingList" class="bg-slate-800 flex flex-col">
         <div class="grid h-12 grid-rows-1 grid-cols-7 place-items-center text-white">
-          <div class="col-span-1">{{ index }}</div>
+          <div class="col-span-1">{{ index + 1 }}</div>
           <div class="col-span-2">{{ list.shopName }}</div>
           <div class="col-span-1">{{ list.tel }}</div>
           <div class="col-span-1">{{ list.date }}</div>
